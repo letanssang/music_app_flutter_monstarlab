@@ -38,32 +38,10 @@ class SongPageViewItem extends StatelessWidget {
             scale: value,
             child: Align(
               alignment: Alignment.bottomCenter,
-              child: FractionallySizedBox(
-                heightFactor: 0.3,
-                widthFactor: 1,
-                child: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Color.fromRGBO(18, 9, 17, 0.5),
-                        Color.fromRGBO(14, 14, 14, 1),
-                        Color.fromRGBO(86, 86, 86, 0),
-                      ],
-                    ),
-                  ),
-                  child: Center(
-                    child: Text('${song.title}',
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                ),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.5,
+                height: MediaQuery.of(context).size.width * 0.5,
+                child: song.image,
               ),
             ),
           );

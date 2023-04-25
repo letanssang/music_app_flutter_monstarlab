@@ -25,7 +25,7 @@ class SongStateNotifier extends StateNotifier<List<Song>> {
           data: song.data,
           title: song.title,
           artist: song.artist ?? 'Unknown',
-          duration: song.duration ?? 0,
+          duration: Duration(milliseconds: song?.duration ?? 0),
           path: song.uri,
           image: QueryArtworkWidget(
             id: song.id,

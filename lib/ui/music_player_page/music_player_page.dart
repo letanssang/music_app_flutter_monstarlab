@@ -1,19 +1,22 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:music_app/ui/blur_image_background.dart';
 
 import '../../data/models/song.dart';
-import 'view_model/music_player_state.dart';
 import 'view_model/music_player_view_model.dart';
 
 class MusicPlayerPage extends ConsumerWidget {
   static const routeName = '/music-player';
 
   const MusicPlayerPage({Key? key}) : super(key: key);
-  String formatDuration(int duration) {
-    return "${(duration ~/ 60000).toString().padLeft(2, '0')}:${(duration ~/ 1000 % 60).toString().padLeft(2, '0')}";
+
+  String formatDuration(Duration d) {
+    final minutes = d.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final seconds = d.inSeconds.remainder(60).toString().padLeft(2, '0');
+
+    return '$minutes:$seconds';
   }
+
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,37 +25,50 @@ class MusicPlayerPage extends ConsumerWidget {
     });
     Song song = ref.watch(musicPlayerViewModelProvider).song;
     final viewModel = ref.read(musicPlayerViewModelProvider.notifier);
+    ref.watch(musicPlayerViewModelProvider).audioPlayer.onPositionChanged.listen((event) {
+      viewModel.updatePosition(event);
+    });
+    Duration currentPosition = ref.watch(musicPlayerViewModelProvider).currentPosition;
     return Scaffold(
       body: BlurImageBackground(
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: Colors.white,
+              Padding(
+                padding: const EdgeInsets.only(left: 28, bottom: 16),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-              Text(
-                song.title,
-                style: const TextStyle(
-                  fontSize: 22,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Nunito',
+              Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: Text(
+                  song.title,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Nunito',
+                  ),
                 ),
               ),
-              Text(
-                song.artist,
-                style: const TextStyle(
-                  fontSize: 17,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Nunito',
+              Padding(
+                padding: const EdgeInsets.only(left: 28),
+                child: Text(
+                  song.artist,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Nunito',
+                  ),
                 ),
               ),
               Center(
@@ -82,31 +98,36 @@ class MusicPlayerPage extends ConsumerWidget {
                 ],
               ),
               Slider(
-                value: 0,
+                value: currentPosition.inSeconds.toDouble(),
                 min: 0,
-                max: song.duration.toDouble(),
+                max: song.duration.inSeconds.toDouble(),
                 inactiveColor: Colors.white70,
                 activeColor: Colors.white,
-                onChanged: (double value) {},
+                onChanged: (double value) {
+                  viewModel.seek(Duration(seconds: value.toInt()));
+                },
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    '0:00',
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16,
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      formatDuration(currentPosition),
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
-                  Text(
-                    formatDuration(song.duration),
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16,
+                    Text(
+                      formatDuration(song.duration),
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -118,27 +139,31 @@ class MusicPlayerPage extends ConsumerWidget {
                         size: 30,
                         color: Colors.white,
                       )),
-                  const IconButton(
-                      onPressed: null,
-                      icon: Icon(
+                  IconButton(
+                      onPressed: viewModel.previous,
+                      icon: const Icon(
                         Icons.skip_previous_outlined,
                         size: 40,
                         color: Colors.white,
                       )),
                   IconButton(
-                      onPressed: viewModel.isPlaying() ? viewModel.pause :viewModel.play,
-                      icon: viewModel.isPlaying() ? const Icon(
-                        Icons.pause_outlined,
-                        size: 50,
-                        color: Colors.white,
-                      ): const Icon(
-                        Icons.play_arrow_outlined,
-                        size: 50,
-                        color: Colors.white,
-                      )),
+                      onPressed: viewModel.isPlaying()
+                          ? viewModel.pause
+                          : viewModel.play,
+                      icon: viewModel.isPlaying()
+                          ? const Icon(
+                              Icons.pause_outlined,
+                              size: 50,
+                              color: Colors.white,
+                            )
+                          : const Icon(
+                              Icons.play_arrow_outlined,
+                              size: 50,
+                              color: Colors.white,
+                            )),
                   IconButton(
-                      onPressed: null,
-                      icon: Icon(
+                      onPressed: viewModel.next,
+                      icon: const Icon(
                         Icons.skip_next_outlined,
                         size: 40,
                         color: Colors.white,

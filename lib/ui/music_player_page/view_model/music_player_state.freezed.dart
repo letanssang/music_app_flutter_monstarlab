@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$MusicPlayerState {
   Song get song => throw _privateConstructorUsedError;
   AudioPlayer get audioPlayer => throw _privateConstructorUsedError;
+  Duration get currentPosition => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $MusicPlayerStateCopyWith<MusicPlayerState> get copyWith =>
@@ -30,7 +31,7 @@ abstract class $MusicPlayerStateCopyWith<$Res> {
           MusicPlayerState value, $Res Function(MusicPlayerState) then) =
       _$MusicPlayerStateCopyWithImpl<$Res, MusicPlayerState>;
   @useResult
-  $Res call({Song song, AudioPlayer audioPlayer});
+  $Res call({Song song, AudioPlayer audioPlayer, Duration currentPosition});
 
   $SongCopyWith<$Res> get song;
 }
@@ -50,6 +51,7 @@ class _$MusicPlayerStateCopyWithImpl<$Res, $Val extends MusicPlayerState>
   $Res call({
     Object? song = null,
     Object? audioPlayer = null,
+    Object? currentPosition = null,
   }) {
     return _then(_value.copyWith(
       song: null == song
@@ -60,6 +62,10 @@ class _$MusicPlayerStateCopyWithImpl<$Res, $Val extends MusicPlayerState>
           ? _value.audioPlayer
           : audioPlayer // ignore: cast_nullable_to_non_nullable
               as AudioPlayer,
+      currentPosition: null == currentPosition
+          ? _value.currentPosition
+          : currentPosition // ignore: cast_nullable_to_non_nullable
+              as Duration,
     ) as $Val);
   }
 
@@ -80,7 +86,7 @@ abstract class _$$_MusicPLayerStateCopyWith<$Res>
       __$$_MusicPLayerStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Song song, AudioPlayer audioPlayer});
+  $Res call({Song song, AudioPlayer audioPlayer, Duration currentPosition});
 
   @override
   $SongCopyWith<$Res> get song;
@@ -99,6 +105,7 @@ class __$$_MusicPLayerStateCopyWithImpl<$Res>
   $Res call({
     Object? song = null,
     Object? audioPlayer = null,
+    Object? currentPosition = null,
   }) {
     return _then(_$_MusicPLayerState(
       song: null == song
@@ -109,6 +116,10 @@ class __$$_MusicPLayerStateCopyWithImpl<$Res>
           ? _value.audioPlayer
           : audioPlayer // ignore: cast_nullable_to_non_nullable
               as AudioPlayer,
+      currentPosition: null == currentPosition
+          ? _value.currentPosition
+          : currentPosition // ignore: cast_nullable_to_non_nullable
+              as Duration,
     ));
   }
 }
@@ -116,16 +127,21 @@ class __$$_MusicPLayerStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_MusicPLayerState implements _MusicPLayerState {
-  const _$_MusicPLayerState({required this.song, required this.audioPlayer});
+  const _$_MusicPLayerState(
+      {required this.song,
+      required this.audioPlayer,
+      required this.currentPosition});
 
   @override
   final Song song;
   @override
   final AudioPlayer audioPlayer;
+  @override
+  final Duration currentPosition;
 
   @override
   String toString() {
-    return 'MusicPlayerState(song: $song, audioPlayer: $audioPlayer)';
+    return 'MusicPlayerState(song: $song, audioPlayer: $audioPlayer, currentPosition: $currentPosition)';
   }
 
   @override
@@ -135,11 +151,14 @@ class _$_MusicPLayerState implements _MusicPLayerState {
             other is _$_MusicPLayerState &&
             (identical(other.song, song) || other.song == song) &&
             (identical(other.audioPlayer, audioPlayer) ||
-                other.audioPlayer == audioPlayer));
+                other.audioPlayer == audioPlayer) &&
+            (identical(other.currentPosition, currentPosition) ||
+                other.currentPosition == currentPosition));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, song, audioPlayer);
+  int get hashCode =>
+      Object.hash(runtimeType, song, audioPlayer, currentPosition);
 
   @JsonKey(ignore: true)
   @override
@@ -151,12 +170,15 @@ class _$_MusicPLayerState implements _MusicPLayerState {
 abstract class _MusicPLayerState implements MusicPlayerState {
   const factory _MusicPLayerState(
       {required final Song song,
-      required final AudioPlayer audioPlayer}) = _$_MusicPLayerState;
+      required final AudioPlayer audioPlayer,
+      required final Duration currentPosition}) = _$_MusicPLayerState;
 
   @override
   Song get song;
   @override
   AudioPlayer get audioPlayer;
+  @override
+  Duration get currentPosition;
   @override
   @JsonKey(ignore: true)
   _$$_MusicPLayerStateCopyWith<_$_MusicPLayerState> get copyWith =>

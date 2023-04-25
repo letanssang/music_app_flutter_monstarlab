@@ -11,6 +11,6 @@ class Song with _$Song {
     required String artist,
     required Widget image,
     required String? path,
-    required int duration,
+    required Duration duration,
   }) = _Song;
 }

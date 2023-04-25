@@ -12,8 +12,11 @@ class SongListItem extends StatelessWidget {
       required this.onPressed,
       Key? key})
       : super(key: key);
-  String formatDuration(int duration) {
-    return "${(duration ~/ 60000).toString().padLeft(2, '0')}:${(duration ~/ 1000 % 60).toString().padLeft(2, '0')}";
+  String formatDuration(Duration d) {
+    final minutes = d.inMinutes.remainder(60).toString().padLeft(2, '0');
+    final seconds = d.inSeconds.remainder(60).toString().padLeft(2, '0');
+
+    return '$minutes:$seconds';
   }
 
   @override

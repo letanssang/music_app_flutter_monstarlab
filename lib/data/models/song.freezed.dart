@@ -22,7 +22,7 @@ mixin _$Song {
   String get artist => throw _privateConstructorUsedError;
   Widget get image => throw _privateConstructorUsedError;
   String? get path => throw _privateConstructorUsedError;
-  int get duration => throw _privateConstructorUsedError;
+  Duration get duration => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SongCopyWith<Song> get copyWith => throw _privateConstructorUsedError;
@@ -40,7 +40,7 @@ abstract class $SongCopyWith<$Res> {
       String artist,
       Widget image,
       String? path,
-      int duration});
+      Duration duration});
 }
 
 /// @nodoc
@@ -92,7 +92,7 @@ class _$SongCopyWithImpl<$Res, $Val extends Song>
       duration: null == duration
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
-              as int,
+              as Duration,
     ) as $Val);
   }
 }
@@ -110,7 +110,7 @@ abstract class _$$_SongCopyWith<$Res> implements $SongCopyWith<$Res> {
       String artist,
       Widget image,
       String? path,
-      int duration});
+      Duration duration});
 }
 
 /// @nodoc
@@ -158,7 +158,7 @@ class __$$_SongCopyWithImpl<$Res> extends _$SongCopyWithImpl<$Res, _$_Song>
       duration: null == duration
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
-              as int,
+              as Duration,
     ));
   }
 }
@@ -188,7 +188,7 @@ class _$_Song implements _Song {
   @override
   final String? path;
   @override
-  final int duration;
+  final Duration duration;
 
   @override
   String toString() {
@@ -229,7 +229,7 @@ abstract class _Song implements Song {
       required final String artist,
       required final Widget image,
       required final String? path,
-      required final int duration}) = _$_Song;
+      required final Duration duration}) = _$_Song;
 
   @override
   int get id;
@@ -244,7 +244,7 @@ abstract class _Song implements Song {
   @override
   String? get path;
   @override
-  int get duration;
+  Duration get duration;
   @override
   @JsonKey(ignore: true)
   _$$_SongCopyWith<_$_Song> get copyWith => throw _privateConstructorUsedError;

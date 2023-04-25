@@ -13,6 +13,7 @@ final musicPlayerViewModelProvider =
 
 class MusicPlayerViewModel extends StateNotifier<MusicPlayerState> {
   final Ref _ref;
+
   MusicPlayerViewModel(this._ref)
       : super(MusicPlayerState(
           song: const Song(
@@ -20,11 +21,12 @@ class MusicPlayerViewModel extends StateNotifier<MusicPlayerState> {
             data: '',
             title: 'Unknown',
             artist: 'Unknown',
-            duration: 0,
+            duration: Duration.zero,
             path: '',
             image: SizedBox(),
           ),
           audioPlayer: AudioPlayerSingleton().audioPlayer!,
+          currentPosition: Duration.zero,
         ));
 
   void init() async {
@@ -32,6 +34,34 @@ class MusicPlayerViewModel extends StateNotifier<MusicPlayerState> {
     if (song != null) {
       state = state.copyWith(song: song);
       state.audioPlayer.setSourceUrl(song.data);
+    }
+  }
+
+  void next() {
+    final songs = _ref.read(songsProvider) as List<Song>;
+    final song = _ref.read(songPlayingProvider);
+    if (song != null) {
+      int index = songs.indexWhere((element) => element.id == song.id);
+      if (index == songs.length - 1) {
+        _ref.read(songPlayingProvider.notifier).state = songs[0];
+      } else {
+        _ref.read(songPlayingProvider.notifier).state = songs[index + 1];
+      }
+      state = state.copyWith(song: songs[index + 1], currentPosition: Duration.zero);
+    }
+  }
+
+  void previous() {
+    final songs = _ref.read(songsProvider) as List<Song>;
+    final song = _ref.read(songPlayingProvider);
+    if (song != null) {
+      int index = songs.indexWhere((element) => element.id == song.id);
+      if (index == 0) {
+        _ref.read(songPlayingProvider.notifier).state = songs[songs.length - 1];
+      } else {
+        _ref.read(songPlayingProvider.notifier).state = songs[index - 1];
+      }
+      state = state.copyWith(song: songs[index + 1], currentPosition: Duration.zero);
     }
   }
 
@@ -51,7 +81,10 @@ class MusicPlayerViewModel extends StateNotifier<MusicPlayerState> {
     return state.audioPlayer.state == PlayerState.playing;
   }
 
-  Future<Duration?> getCurrentPosition() async {
-    return await state.audioPlayer.getCurrentPosition();
+  void updatePosition(Duration event) {
+    state = state.copyWith(currentPosition: event);
+  }
+  Future<void> seek(Duration position) async {
+    await state.audioPlayer.seek(position);
   }
 }

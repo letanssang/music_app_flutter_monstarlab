@@ -9,5 +9,6 @@ class MusicPlayerState with _$MusicPlayerState {
   const factory MusicPlayerState({
     required Song song,
     required AudioPlayer audioPlayer,
+    required Duration currentPosition,
   }) = _MusicPLayerState;
 }
