@@ -26,7 +26,8 @@ class MusicPlayerPage extends ConsumerWidget {
     ref.watch(musicPlayerViewModelProvider).audioPlayer.onPositionChanged.listen((event) {
       viewModel.updatePosition(event);
     });
-    Duration currentPosition = ref.watch(musicPlayerViewModelProvider).currentPosition;
+    final state = ref.watch(musicPlayerViewModelProvider);
+    Duration currentPosition = state.currentPosition;
     return Scaffold(
       body: BlurImageBackground(
         child: SafeArea(
@@ -71,6 +72,7 @@ class MusicPlayerPage extends ConsumerWidget {
               ),
               Center(
                 child: Container(
+                  margin: const EdgeInsets.all(18),
                   height: MediaQuery.of(context).size.width * 0.7,
                   width: MediaQuery.of(context).size.width * 0.7,
                   decoration: const BoxDecoration(
@@ -91,10 +93,10 @@ class MusicPlayerPage extends ConsumerWidget {
                       color: Colors.grey,
                     ),
                     child: IconButton(
-                        onPressed: null,
+                        onPressed: viewModel.onTapFavorite,
                         icon: Icon(
                           Icons.favorite_rounded,
-                          color: Colors.white,
+                          color: state.isFavorite ? Color(0xFFFA00FF): Colors.white,
                           size: 25,
                         )),
                   ),
@@ -116,7 +118,7 @@ class MusicPlayerPage extends ConsumerWidget {
               Slider(
                 value: currentPosition.inSeconds.toDouble(),
                 min: 0,
-                max: song.duration.inSeconds.toDouble(),
+                max: song.duration.inSeconds.toDouble() + 1,
                 inactiveColor: Colors.white70,
                 activeColor: Color(0xFF64D2FF),
                 onChanged: (double value) {
@@ -153,24 +155,30 @@ class MusicPlayerPage extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   IconButton(
-                      onPressed: null,
-                      icon: SvgPicture.asset(
+                      onPressed: viewModel.onTapShuffle,
+                      icon: state.isShuffle ?
+                          SvgPicture.asset(
+                        'assets/images/buttons/shuffle.svg',
+                        height: 30,
+                      ):
+                      SvgPicture.asset(
                         'assets/images/buttons/shuffle_off.svg',
                         height: 30,
                       )
                       ),
                   IconButton(
                       onPressed: viewModel.skipBack,
-                      icon: SvgPicture.asset(
-                        'assets/images/buttons/skip_back.svg',
-                        height: 40,
+                      icon: Icon(
+                        Icons.skip_previous_outlined,
+                        color: Colors.white,
+                        size: 40,
                       )
                       ),
                   IconButton(
-                      onPressed: viewModel.isPlaying()
+                      onPressed: state.isPlaying
                           ? viewModel.pause
                           : viewModel.play,
-                      icon: viewModel.isPlaying()
+                      icon: state.isPlaying
                           ? SvgPicture.asset(
                               'assets/images/buttons/pause.svg',
                               height: 50,
@@ -182,14 +190,20 @@ class MusicPlayerPage extends ConsumerWidget {
                       ),
                   IconButton(
                       onPressed: viewModel.skipForward,
-                      icon: SvgPicture.asset(
-                        'assets/images/buttons/skip_forward.svg',
-                        height: 40,
+                      icon: Icon(
+                        Icons.skip_next_outlined,
+                        color: Colors.white,
+                        size: 40,
                       )
                       ),
                   IconButton(
-                      onPressed: null,
-                      icon: SvgPicture.asset(
+                      onPressed: viewModel.onTapRepeat,
+                      icon: state.isRepeat ?
+                      SvgPicture.asset(
+                        'assets/images/buttons/repeat.svg',
+                        height: 30,
+                      )
+                          : SvgPicture.asset(
                         'assets/images/buttons/repeat_off.svg',
                         height: 30,
                       )

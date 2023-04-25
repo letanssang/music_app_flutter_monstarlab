@@ -12,5 +12,6 @@ class Song with _$Song {
     required Widget image,
     required String? path,
     required Duration duration,
+    @Default(false) bool isFavorite,
   }) = _Song;
 }

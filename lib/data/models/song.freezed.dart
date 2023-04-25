@@ -23,6 +23,7 @@ mixin _$Song {
   Widget get image => throw _privateConstructorUsedError;
   String? get path => throw _privateConstructorUsedError;
   Duration get duration => throw _privateConstructorUsedError;
+  bool get isFavorite => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SongCopyWith<Song> get copyWith => throw _privateConstructorUsedError;
@@ -40,7 +41,8 @@ abstract class $SongCopyWith<$Res> {
       String artist,
       Widget image,
       String? path,
-      Duration duration});
+      Duration duration,
+      bool isFavorite});
 }
 
 /// @nodoc
@@ -63,6 +65,7 @@ class _$SongCopyWithImpl<$Res, $Val extends Song>
     Object? image = null,
     Object? path = freezed,
     Object? duration = null,
+    Object? isFavorite = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -93,6 +96,10 @@ class _$SongCopyWithImpl<$Res, $Val extends Song>
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
               as Duration,
+      isFavorite: null == isFavorite
+          ? _value.isFavorite
+          : isFavorite // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -110,7 +117,8 @@ abstract class _$$_SongCopyWith<$Res> implements $SongCopyWith<$Res> {
       String artist,
       Widget image,
       String? path,
-      Duration duration});
+      Duration duration,
+      bool isFavorite});
 }
 
 /// @nodoc
@@ -129,6 +137,7 @@ class __$$_SongCopyWithImpl<$Res> extends _$SongCopyWithImpl<$Res, _$_Song>
     Object? image = null,
     Object? path = freezed,
     Object? duration = null,
+    Object? isFavorite = null,
   }) {
     return _then(_$_Song(
       id: null == id
@@ -159,6 +168,10 @@ class __$$_SongCopyWithImpl<$Res> extends _$SongCopyWithImpl<$Res, _$_Song>
           ? _value.duration
           : duration // ignore: cast_nullable_to_non_nullable
               as Duration,
+      isFavorite: null == isFavorite
+          ? _value.isFavorite
+          : isFavorite // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -173,7 +186,8 @@ class _$_Song implements _Song {
       required this.artist,
       required this.image,
       required this.path,
-      required this.duration});
+      required this.duration,
+      this.isFavorite = false});
 
   @override
   final int id;
@@ -189,10 +203,13 @@ class _$_Song implements _Song {
   final String? path;
   @override
   final Duration duration;
+  @override
+  @JsonKey()
+  final bool isFavorite;
 
   @override
   String toString() {
-    return 'Song(id: $id, data: $data, title: $title, artist: $artist, image: $image, path: $path, duration: $duration)';
+    return 'Song(id: $id, data: $data, title: $title, artist: $artist, image: $image, path: $path, duration: $duration, isFavorite: $isFavorite)';
   }
 
   @override
@@ -207,12 +224,14 @@ class _$_Song implements _Song {
             (identical(other.image, image) || other.image == image) &&
             (identical(other.path, path) || other.path == path) &&
             (identical(other.duration, duration) ||
-                other.duration == duration));
+                other.duration == duration) &&
+            (identical(other.isFavorite, isFavorite) ||
+                other.isFavorite == isFavorite));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, data, title, artist, image, path, duration);
+  int get hashCode => Object.hash(
+      runtimeType, id, data, title, artist, image, path, duration, isFavorite);
 
   @JsonKey(ignore: true)
   @override
@@ -229,7 +248,8 @@ abstract class _Song implements Song {
       required final String artist,
       required final Widget image,
       required final String? path,
-      required final Duration duration}) = _$_Song;
+      required final Duration duration,
+      final bool isFavorite}) = _$_Song;
 
   @override
   int get id;
@@ -245,6 +265,8 @@ abstract class _Song implements Song {
   String? get path;
   @override
   Duration get duration;
+  @override
+  bool get isFavorite;
   @override
   @JsonKey(ignore: true)
   _$$_SongCopyWith<_$_Song> get copyWith => throw _privateConstructorUsedError;
