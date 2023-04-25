@@ -63,7 +63,14 @@ flutter:
     - assets/images/poster_app.svg
     - assets/images/bgr.png
     - assets/images/avatar.jpg
-
+    - assets/images/buttons/repeat.svg
+    - assets/images/buttons/repeat_off.svg
+    - assets/images/buttons/pause.svg
+    - assets/images/buttons/play.svg
+    - assets/images/buttons/shuffle.svg
+    - assets/images/buttons/shuffle_off.svg
+    - assets/images/buttons/skip_back.svg
+    - assets/images/buttons/skip_forward.svg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

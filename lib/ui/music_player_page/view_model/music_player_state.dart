@@ -10,5 +10,9 @@ class MusicPlayerState with _$MusicPlayerState {
     required Song song,
     required AudioPlayer audioPlayer,
     required Duration currentPosition,
+    @Default(false) bool isPlaying,
+    @Default(false) bool isFavorite,
+    @Default(false) bool isShuffle,
+    @Default(false) bool isRepeat,
   }) = _MusicPLayerState;
 }

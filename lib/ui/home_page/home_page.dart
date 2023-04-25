@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:music_app/ui/blur_image_background.dart';
 import 'package:music_app/ui/home_page/components/custom_appbar.dart';
 import 'package:music_app/ui/home_page/components/song_page_view_item.dart';
-import 'package:music_app/ui/music_player_page/view_model/music_player_view_model.dart';
 
 import '../../data/models/song.dart';
 import '../../services/songs_provider.dart';
@@ -17,7 +16,6 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final songs = ref.watch(songsProvider) as List<Song>;
-    print(songs);
     final pageController = PageController(
       viewportFraction: 0.5,
       initialPage: 1,
@@ -29,6 +27,7 @@ class HomePage extends ConsumerWidget {
       body: BlurImageBackground(
         child: SafeArea(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CustomAppBar(),
               Flexible(
@@ -44,9 +43,9 @@ class HomePage extends ConsumerWidget {
                     )
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('Your Music', style: const TextStyle(
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text('Your Music', style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
