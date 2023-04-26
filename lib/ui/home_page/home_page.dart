@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:music_app/services/audio_player_manager.dart';
 import 'package:music_app/ui/blur_image_background.dart';
 import 'package:music_app/ui/home_page/components/custom_appbar.dart';
 import 'package:music_app/ui/home_page/components/song_page_view_item.dart';
@@ -20,8 +21,13 @@ class HomePage extends ConsumerWidget {
       viewportFraction: 0.5,
       initialPage: 1,
     );
-    void clickOnItem(Song song){
-      ref.read(songPlayingProvider.notifier).state = song;
+    void clickOnItem(int index){
+      if(ref.read(songPlayingIndexProvider.notifier).state == index){
+        return;
+      }
+      ref.read(songPlayingIndexProvider.notifier).state = index;
+      ref.read(currentPostionProvider.notifier).state = null;
+
     }
     return Scaffold(
       body: BlurImageBackground(

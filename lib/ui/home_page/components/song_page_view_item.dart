@@ -6,15 +6,15 @@ class SongPageViewItem extends StatelessWidget {
   final PageController pageController;
   final int index;
   final Song song;
-  final void Function(Song) onPressed;
+  final void Function(int) onPressed;
   SongPageViewItem({required this.pageController,required this.index,required this.song,required this.onPressed, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        onPressed(song);
-        Navigator.of(context).pushNamed('/music-player', arguments: song);
+        onPressed(index);
+        Navigator.of(context).pushNamed('/music-player');
       },
       onPanUpdate: (details) {
         if (details.delta.dx > 0) {

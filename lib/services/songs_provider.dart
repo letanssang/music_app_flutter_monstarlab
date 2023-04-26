@@ -4,7 +4,7 @@ import '../data/models/song.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 final songsProvider = StateNotifierProvider((ref) => SongStateNotifier());
-final songPlayingProvider = StateProvider<Song?>((ref) => null);
+final songPlayingIndexProvider = StateProvider<int?>((ref) => null);
 
 class SongStateNotifier extends StateNotifier<List<Song>> {
   Song? songPlaying;

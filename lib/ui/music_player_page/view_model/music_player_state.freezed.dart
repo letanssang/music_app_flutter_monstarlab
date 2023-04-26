@@ -17,8 +17,6 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$MusicPlayerState {
   Song get song => throw _privateConstructorUsedError;
-  AudioPlayer get audioPlayer => throw _privateConstructorUsedError;
-  Duration get currentPosition => throw _privateConstructorUsedError;
   bool get isPlaying => throw _privateConstructorUsedError;
   bool get isFavorite => throw _privateConstructorUsedError;
   bool get isShuffle => throw _privateConstructorUsedError;
@@ -37,8 +35,6 @@ abstract class $MusicPlayerStateCopyWith<$Res> {
   @useResult
   $Res call(
       {Song song,
-      AudioPlayer audioPlayer,
-      Duration currentPosition,
       bool isPlaying,
       bool isFavorite,
       bool isShuffle,
@@ -61,8 +57,6 @@ class _$MusicPlayerStateCopyWithImpl<$Res, $Val extends MusicPlayerState>
   @override
   $Res call({
     Object? song = null,
-    Object? audioPlayer = null,
-    Object? currentPosition = null,
     Object? isPlaying = null,
     Object? isFavorite = null,
     Object? isShuffle = null,
@@ -73,14 +67,6 @@ class _$MusicPlayerStateCopyWithImpl<$Res, $Val extends MusicPlayerState>
           ? _value.song
           : song // ignore: cast_nullable_to_non_nullable
               as Song,
-      audioPlayer: null == audioPlayer
-          ? _value.audioPlayer
-          : audioPlayer // ignore: cast_nullable_to_non_nullable
-              as AudioPlayer,
-      currentPosition: null == currentPosition
-          ? _value.currentPosition
-          : currentPosition // ignore: cast_nullable_to_non_nullable
-              as Duration,
       isPlaying: null == isPlaying
           ? _value.isPlaying
           : isPlaying // ignore: cast_nullable_to_non_nullable
@@ -119,8 +105,6 @@ abstract class _$$_MusicPLayerStateCopyWith<$Res>
   @useResult
   $Res call(
       {Song song,
-      AudioPlayer audioPlayer,
-      Duration currentPosition,
       bool isPlaying,
       bool isFavorite,
       bool isShuffle,
@@ -142,8 +126,6 @@ class __$$_MusicPLayerStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? song = null,
-    Object? audioPlayer = null,
-    Object? currentPosition = null,
     Object? isPlaying = null,
     Object? isFavorite = null,
     Object? isShuffle = null,
@@ -154,14 +136,6 @@ class __$$_MusicPLayerStateCopyWithImpl<$Res>
           ? _value.song
           : song // ignore: cast_nullable_to_non_nullable
               as Song,
-      audioPlayer: null == audioPlayer
-          ? _value.audioPlayer
-          : audioPlayer // ignore: cast_nullable_to_non_nullable
-              as AudioPlayer,
-      currentPosition: null == currentPosition
-          ? _value.currentPosition
-          : currentPosition // ignore: cast_nullable_to_non_nullable
-              as Duration,
       isPlaying: null == isPlaying
           ? _value.isPlaying
           : isPlaying // ignore: cast_nullable_to_non_nullable
@@ -187,8 +161,6 @@ class __$$_MusicPLayerStateCopyWithImpl<$Res>
 class _$_MusicPLayerState implements _MusicPLayerState {
   const _$_MusicPLayerState(
       {required this.song,
-      required this.audioPlayer,
-      required this.currentPosition,
       this.isPlaying = false,
       this.isFavorite = false,
       this.isShuffle = false,
@@ -196,10 +168,6 @@ class _$_MusicPLayerState implements _MusicPLayerState {
 
   @override
   final Song song;
-  @override
-  final AudioPlayer audioPlayer;
-  @override
-  final Duration currentPosition;
   @override
   @JsonKey()
   final bool isPlaying;
@@ -215,7 +183,7 @@ class _$_MusicPLayerState implements _MusicPLayerState {
 
   @override
   String toString() {
-    return 'MusicPlayerState(song: $song, audioPlayer: $audioPlayer, currentPosition: $currentPosition, isPlaying: $isPlaying, isFavorite: $isFavorite, isShuffle: $isShuffle, isRepeat: $isRepeat)';
+    return 'MusicPlayerState(song: $song, isPlaying: $isPlaying, isFavorite: $isFavorite, isShuffle: $isShuffle, isRepeat: $isRepeat)';
   }
 
   @override
@@ -224,10 +192,6 @@ class _$_MusicPLayerState implements _MusicPLayerState {
         (other.runtimeType == runtimeType &&
             other is _$_MusicPLayerState &&
             (identical(other.song, song) || other.song == song) &&
-            (identical(other.audioPlayer, audioPlayer) ||
-                other.audioPlayer == audioPlayer) &&
-            (identical(other.currentPosition, currentPosition) ||
-                other.currentPosition == currentPosition) &&
             (identical(other.isPlaying, isPlaying) ||
                 other.isPlaying == isPlaying) &&
             (identical(other.isFavorite, isFavorite) ||
@@ -239,8 +203,8 @@ class _$_MusicPLayerState implements _MusicPLayerState {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, song, audioPlayer,
-      currentPosition, isPlaying, isFavorite, isShuffle, isRepeat);
+  int get hashCode => Object.hash(
+      runtimeType, song, isPlaying, isFavorite, isShuffle, isRepeat);
 
   @JsonKey(ignore: true)
   @override
@@ -252,8 +216,6 @@ class _$_MusicPLayerState implements _MusicPLayerState {
 abstract class _MusicPLayerState implements MusicPlayerState {
   const factory _MusicPLayerState(
       {required final Song song,
-      required final AudioPlayer audioPlayer,
-      required final Duration currentPosition,
       final bool isPlaying,
       final bool isFavorite,
       final bool isShuffle,
@@ -261,10 +223,6 @@ abstract class _MusicPLayerState implements MusicPlayerState {
 
   @override
   Song get song;
-  @override
-  AudioPlayer get audioPlayer;
-  @override
-  Duration get currentPosition;
   @override
   bool get isPlaying;
   @override

@@ -5,7 +5,7 @@ import '../../../data/models/song.dart';
 class SongListItem extends StatelessWidget {
   final int index;
   final Song song;
-  final void Function(Song) onPressed;
+  final void Function(int) onPressed;
   const SongListItem(
       {required this.index,
       required this.song,
@@ -23,8 +23,8 @@ class SongListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        onPressed(song);
-        Navigator.of(context).pushNamed('/music-player', arguments: song);
+        onPressed(index);
+        Navigator.of(context).pushNamed('/music-player');
       },
       child: Container(
         margin: const EdgeInsets.symmetric(

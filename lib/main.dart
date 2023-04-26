@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:music_app/services/audio_player_manager.dart';
 import 'package:music_app/ui/music_player_page/music_player_page.dart';
 
 import 'services/songs_provider.dart';
@@ -18,6 +19,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.watch(songsProvider.notifier).loadSongs();
+    AudioPlayerSingleton();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -27,7 +29,7 @@ class MyApp extends ConsumerWidget {
       home: const WelcomePage(),
       routes: {
         HomePage.routeName: (context) => const HomePage(),
-        MusicPlayerPage.routeName: (context) => const MusicPlayerPage(),
+        MusicPlayerPage.routeName: (context) => MusicPlayerPage(),
       },
     );
   }

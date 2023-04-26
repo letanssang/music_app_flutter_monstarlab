@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:music_app/services/audio_player_manager.dart';
 import 'package:music_app/ui/blur_image_background.dart';
 
 import '../../data/models/song.dart';
@@ -23,11 +24,11 @@ class MusicPlayerPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Song song = ref.watch(musicPlayerViewModelProvider).song;
     final viewModel = ref.read(musicPlayerViewModelProvider.notifier);
-    ref.watch(musicPlayerViewModelProvider).audioPlayer.onPositionChanged.listen((event) {
-      viewModel.updatePosition(event);
+    AudioPlayerSingleton().audioPlayer!.onPositionChanged.listen((event) {
+      ref.watch(currentPostionProvider.notifier).state = event;
     });
+    final currentPosition = ref.watch(currentPostionProvider) ?? Duration.zero;
     final state = ref.watch(musicPlayerViewModelProvider);
-    Duration currentPosition = state.currentPosition;
     return Scaffold(
       body: BlurImageBackground(
         child: SafeArea(
@@ -167,7 +168,7 @@ class MusicPlayerPage extends ConsumerWidget {
                       )
                       ),
                   IconButton(
-                      onPressed: viewModel.skipBack,
+                      onPressed: viewModel.skipBackward,
                       icon: Icon(
                         Icons.skip_previous_outlined,
                         color: Colors.white,
