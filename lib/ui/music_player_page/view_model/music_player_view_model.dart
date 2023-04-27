@@ -38,14 +38,15 @@ class MusicPlayerViewModel extends StateNotifier<MusicPlayerState> {
 
   void play() async {
     audioPlayer.setSourceUrl(getSongFromList().data);
-    state = state.copyWith(isPlaying: true);
-    await audioPlayer.stop();
+    state = state.copyWith(isPlaying: true, isFavorite: getSongFromList().isFavorite);
+    await audioPlayer.pause();
     Future.delayed(const Duration(milliseconds: 100), () async {
       await audioPlayer.resume();
+      moveToNextSong();
     });
 
-    moveToNextSong();
   }
+
 
   void moveToNextSong() {
     audioPlayer.onPlayerComplete.listen((event) async {
@@ -55,15 +56,15 @@ class MusicPlayerViewModel extends StateNotifier<MusicPlayerState> {
         play();
       } else {
         // Play the next song in the list
-        skipForward();
+        skipNext();
       }
     });
   }
 
-  void skipForward() {
+  void skipNext() {
     final songs = getListSong();
     final song = getSongFromList();
-    int index = getIndex(song);
+    int index = getIndex();
     if (index == songs.length - 1) {
       index = 0;
     } else {
@@ -76,8 +77,7 @@ class MusicPlayerViewModel extends StateNotifier<MusicPlayerState> {
 
   void skipBackward() {
     final songs = getListSong();
-    final song = getSongFromList();
-    int index = getIndex(song);
+    int index = getIndex();
     if (index == 0) {
       index = songs.length - 1;
     } else {
@@ -109,8 +109,7 @@ class MusicPlayerViewModel extends StateNotifier<MusicPlayerState> {
   void onTapFavorite() {
     state = state.copyWith(isFavorite: !state.isFavorite);
     final songs = getListSong();
-    final song = getSongFromList();
-    int index = getIndex(song);
+    int index = getIndex();
     songs[index] = songs[index].copyWith(isFavorite: state.isFavorite);
   }
 
@@ -121,7 +120,7 @@ class MusicPlayerViewModel extends StateNotifier<MusicPlayerState> {
     await audioPlayer.seek(position);
   }
 
-  int getIndex(Song song) {
+  int getIndex() {
     return _ref.read(songPlayingIndexProvider) ?? 0;
   }
 

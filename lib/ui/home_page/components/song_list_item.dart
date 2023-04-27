@@ -6,10 +6,12 @@ class SongListItem extends StatelessWidget {
   final int index;
   final Song song;
   final void Function(int) onPressed;
+  final bool isPlaying;
   const SongListItem(
       {required this.index,
       required this.song,
       required this.onPressed,
+      required this.isPlaying,
       Key? key})
       : super(key: key);
   String formatDuration(Duration d) {
@@ -57,15 +59,15 @@ class SongListItem extends StatelessWidget {
           subtitle: Text(
             formatDuration(song.duration),
             style: const TextStyle(
-              color: Color.fromRGBO(255, 255, 255, 0.65),
+              color: Color(0xFF009DE0),
               fontSize: 14,
             ),
           ),
           trailing: IconButton(
             onPressed: () {},
-            icon: const Icon(
+            icon: Icon(
               Icons.play_arrow_outlined,
-              color: Colors.white,
+              color: isPlaying ? Color(0xFFFA00FF) :Colors.white,
             ),
           ),
         ),

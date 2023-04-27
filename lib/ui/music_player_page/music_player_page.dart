@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:music_app/services/audio_player_manager.dart';
 import 'package:music_app/ui/blur_image_background.dart';
+import 'package:music_app/ui/music_player_page/components/rotating_album_art.dart';
 
 import '../../data/models/song.dart';
 import 'view_model/music_player_view_model.dart';
@@ -10,7 +11,7 @@ import 'view_model/music_player_view_model.dart';
 class MusicPlayerPage extends ConsumerWidget {
   static const routeName = '/music-player';
 
-  const MusicPlayerPage({Key? key}) : super(key: key);
+  MusicPlayerPage({Key? key}) : super(key: key);
 
   String formatDuration(Duration d) {
     final minutes = d.inMinutes.remainder(60).toString().padLeft(2, '0');
@@ -18,14 +19,16 @@ class MusicPlayerPage extends ConsumerWidget {
 
     return '$minutes:$seconds';
   }
-
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Song song = ref.watch(musicPlayerViewModelProvider).song;
+    Song song = ref
+        .watch(musicPlayerViewModelProvider)
+        .song;
     final viewModel = ref.read(musicPlayerViewModelProvider.notifier);
     AudioPlayerSingleton().audioPlayer!.onPositionChanged.listen((event) {
-      ref.watch(currentPostionProvider.notifier).state = event;
+      ref
+          .watch(currentPostionProvider.notifier)
+          .state = event;
     });
     final currentPosition = ref.watch(currentPostionProvider) ?? Duration.zero;
     final state = ref.watch(musicPlayerViewModelProvider);
@@ -71,17 +74,7 @@ class MusicPlayerPage extends ConsumerWidget {
                   ),
                 ),
               ),
-              Center(
-                child: Container(
-                  margin: const EdgeInsets.all(18),
-                  height: MediaQuery.of(context).size.width * 0.7,
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                  ),
-                  child: ClipOval(child: song.image),
-                ),
-              ),
+              RotatingAlbumArt(image: song.image),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -97,7 +90,8 @@ class MusicPlayerPage extends ConsumerWidget {
                         onPressed: viewModel.onTapFavorite,
                         icon: Icon(
                           Icons.favorite_rounded,
-                          color: state.isFavorite ? Color(0xFFFA00FF): Colors.white,
+                          color: state.isFavorite ? Color(0xFFFA00FF) : Colors
+                              .white,
                           size: 25,
                         )),
                   ),
@@ -127,7 +121,7 @@ class MusicPlayerPage extends ConsumerWidget {
                 },
               ),
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 28),
+                margin: const EdgeInsets.only(left: 28,right: 28, bottom: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -146,7 +140,7 @@ class MusicPlayerPage extends ConsumerWidget {
                         color: Colors.white70,
                         fontSize: 15,
                         fontFamily: 'Nunito',
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.bold
                       ),
                     ),
                   ],
@@ -158,45 +152,45 @@ class MusicPlayerPage extends ConsumerWidget {
                   IconButton(
                       onPressed: viewModel.onTapShuffle,
                       icon: state.isShuffle ?
-                          SvgPicture.asset(
+                      SvgPicture.asset(
                         'assets/images/buttons/shuffle.svg',
                         height: 30,
-                      ):
+                      ) :
                       SvgPicture.asset(
                         'assets/images/buttons/shuffle_off.svg',
                         height: 30,
                       )
-                      ),
+                  ),
                   IconButton(
                       onPressed: viewModel.skipBackward,
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.skip_previous_outlined,
                         color: Colors.white,
                         size: 40,
                       )
-                      ),
+                  ),
                   IconButton(
                       onPressed: state.isPlaying
                           ? viewModel.pause
                           : viewModel.play,
                       icon: state.isPlaying
                           ? SvgPicture.asset(
-                              'assets/images/buttons/pause.svg',
-                              height: 50,
+                        'assets/images/buttons/pause.svg',
+                        height: 50,
                       )
                           : SvgPicture.asset(
-                              'assets/images/buttons/play.svg',
-                              height: 50,
-                            )
-                      ),
+                        'assets/images/buttons/play.svg',
+                        height: 50,
+                      )
+                  ),
                   IconButton(
-                      onPressed: viewModel.skipForward,
+                      onPressed: viewModel.skipNext,
                       icon: Icon(
                         Icons.skip_next_outlined,
                         color: Colors.white,
                         size: 40,
                       )
-                      ),
+                  ),
                   IconButton(
                       onPressed: viewModel.onTapRepeat,
                       icon: state.isRepeat ?
@@ -208,7 +202,7 @@ class MusicPlayerPage extends ConsumerWidget {
                         'assets/images/buttons/repeat_off.svg',
                         height: 30,
                       )
-                      ),
+                  ),
                 ],
               )
             ],
