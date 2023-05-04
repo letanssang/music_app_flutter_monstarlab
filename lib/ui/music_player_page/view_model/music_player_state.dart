@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../data/models/song.dart';

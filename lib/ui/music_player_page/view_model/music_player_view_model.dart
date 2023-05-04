@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,20 +35,15 @@ class MusicPlayerViewModel extends StateNotifier<MusicPlayerState> {
   }
 
   void play() async {
-    audioPlayer.setSourceUrl(getSongFromList().data);
     state = state.copyWith(isPlaying: true, isFavorite: getSongFromList().isFavorite);
-    await audioPlayer.pause();
-    Future.delayed(const Duration(milliseconds: 100), () async {
-      await audioPlayer.resume();
-      moveToNextSong();
-    });
 
+    await audioPlayer.play(DeviceFileSource(getSongFromList().data));
+    moveToNextSong();
   }
 
 
   void moveToNextSong() {
     audioPlayer.onPlayerComplete.listen((event) async {
-      _ref.watch(currentPostionProvider.notifier).state = Duration.zero;
       if (state.isRepeat) {
         // If repeat mode is enabled, play the same song again
         play();
@@ -60,10 +53,14 @@ class MusicPlayerViewModel extends StateNotifier<MusicPlayerState> {
       }
     });
   }
-
+  void jumpToSong(int index) {
+    final songs = getListSong();
+    state = state.copyWith(song: songs[index]);
+    _ref.watch(songPlayingIndexProvider.notifier).state = index;
+    play();
+  }
   void skipNext() {
     final songs = getListSong();
-    final song = getSongFromList();
     int index = getIndex();
     if (index == songs.length - 1) {
       index = 0;
@@ -71,7 +68,7 @@ class MusicPlayerViewModel extends StateNotifier<MusicPlayerState> {
       index++;
     }
     state = state.copyWith(song: songs[index]);
-    _ref.read(songPlayingIndexProvider.notifier).state = index;
+    _ref.watch(songPlayingIndexProvider.notifier).state = index;
     play();
   }
 
@@ -84,8 +81,12 @@ class MusicPlayerViewModel extends StateNotifier<MusicPlayerState> {
       index--;
     }
     state = state.copyWith(song: songs[index]);
-    _ref.read(songPlayingIndexProvider.notifier).state = index;
+    _ref.watch(songPlayingIndexProvider.notifier).state = index;
     play();
+  }
+  void resume() async {
+    state = state.copyWith(isPlaying: true);
+    await audioPlayer.resume();
   }
 
   void pause() async {

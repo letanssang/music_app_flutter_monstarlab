@@ -172,7 +172,7 @@ class MusicPlayerPage extends ConsumerWidget {
                   IconButton(
                       onPressed: state.isPlaying
                           ? viewModel.pause
-                          : viewModel.play,
+                          : viewModel.resume,
                       icon: state.isPlaying
                           ? SvgPicture.asset(
                         'assets/images/buttons/pause.svg',
