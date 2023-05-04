@@ -44,7 +44,7 @@ class MusicPlayerViewModel extends StateNotifier<MusicPlayerState> {
 
   void moveToNextSong() {
     audioPlayer.onPlayerComplete.listen((event) async {
-      if (state.isRepeat) {
+      if (_ref.read(isRepeatProvider)) {
         // If repeat mode is enabled, play the same song again
         play();
       } else {
@@ -52,6 +52,9 @@ class MusicPlayerViewModel extends StateNotifier<MusicPlayerState> {
         skipNext();
       }
     });
+  }
+  void onTapRepeat() {
+    _ref.watch(isRepeatProvider.notifier).state = !_ref.watch(isRepeatProvider);
   }
   void jumpToSong(int index) {
     final songs = getListSong();
@@ -103,9 +106,6 @@ class MusicPlayerViewModel extends StateNotifier<MusicPlayerState> {
     state = state.copyWith(isShuffle: !state.isShuffle);
   }
 
-  void onTapRepeat() {
-    state = state.copyWith(isRepeat: !state.isRepeat);
-  }
 
   void onTapFavorite() {
     state = state.copyWith(isFavorite: !state.isFavorite);

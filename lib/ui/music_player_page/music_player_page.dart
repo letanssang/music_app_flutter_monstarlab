@@ -11,13 +11,35 @@ import 'view_model/music_player_view_model.dart';
 class MusicPlayerPage extends ConsumerWidget {
   static const routeName = '/music-player';
 
-  MusicPlayerPage({Key? key}) : super(key: key);
+  const MusicPlayerPage({Key? key}) : super(key: key);
 
   String formatDuration(Duration d) {
     final minutes = d.inMinutes.remainder(60).toString().padLeft(2, '0');
     final seconds = d.inSeconds.remainder(60).toString().padLeft(2, '0');
 
     return '$minutes:$seconds';
+  }
+  void showSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(onPressed: (){
+              AudioPlayerSingleton().audioPlayer!.setVolume(0);
+            }, icon: SvgPicture.asset(
+              'assets/images/buttons/mute.svg',
+              height: 30,
+            )),
+            IconButton(onPressed: null, icon: SvgPicture.asset(
+              'assets/images/buttons/share.svg',
+              height: 30,
+            ))
+          ],
+        ),
+        duration: const Duration(seconds: 5),
+      ),
+    );
   }
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -90,7 +112,7 @@ class MusicPlayerPage extends ConsumerWidget {
                         onPressed: viewModel.onTapFavorite,
                         icon: Icon(
                           Icons.favorite_rounded,
-                          color: state.isFavorite ? Color(0xFFFA00FF) : Colors
+                          color: state.isFavorite ? const Color(0xFFFA00FF) : Colors
                               .white,
                           size: 25,
                         )),
@@ -99,13 +121,15 @@ class MusicPlayerPage extends ConsumerWidget {
                     height: 40,
                     width: 40,
                     margin: const EdgeInsets.only(right: 16),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.grey,
                     ),
                     child: IconButton(
-                        onPressed: null,
-                        icon: Icon(Icons.more_horiz_rounded,
+                        onPressed: (){
+                          showSnackBar(context);
+                        },
+                        icon: const Icon(Icons.more_horiz_rounded,
                             color: Colors.white, size: 25)),
                   ),
                 ],
@@ -115,7 +139,8 @@ class MusicPlayerPage extends ConsumerWidget {
                 min: 0,
                 max: song.duration.inSeconds.toDouble() + 1,
                 inactiveColor: Colors.white70,
-                activeColor: Color(0xFF64D2FF),
+                activeColor: const Color(0xFF64D2FF),
+                thumbColor: Colors.white,
                 onChanged: (double value) {
                   viewModel.seek(Duration(seconds: value.toInt()));
                 },
@@ -185,7 +210,7 @@ class MusicPlayerPage extends ConsumerWidget {
                   ),
                   IconButton(
                       onPressed: viewModel.skipNext,
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.skip_next_outlined,
                         color: Colors.white,
                         size: 40,
@@ -193,7 +218,7 @@ class MusicPlayerPage extends ConsumerWidget {
                   ),
                   IconButton(
                       onPressed: viewModel.onTapRepeat,
-                      icon: state.isRepeat ?
+                      icon: ref.watch(isRepeatProvider) ?
                       SvgPicture.asset(
                         'assets/images/buttons/repeat.svg',
                         height: 30,
@@ -204,7 +229,7 @@ class MusicPlayerPage extends ConsumerWidget {
                       )
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),

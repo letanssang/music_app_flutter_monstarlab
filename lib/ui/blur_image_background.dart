@@ -3,8 +3,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class BlurImageBackground extends StatelessWidget {
-  Widget child;
-  BlurImageBackground({required this.child, Key? key}) : super(key: key);
+  final Widget child;
+
+  const BlurImageBackground({required this.child, Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_app/ui/music_player_page/components/rotating_album_art.dart';
 
 import '../../../data/models/song.dart';
 
@@ -45,9 +46,11 @@ class SongListItem extends StatelessWidget {
           ),
         ),
         child: ListTile(
-          leading: ClipOval(
-            child: song.image,
-          ),
+          leading: isPlaying ? ClipOval(
+            child: FittedBox(
+              fit: BoxFit.cover,
+                child: RotatingAlbumArt(image: song.image)),
+          ) : song.image,
           title: Text(
             song.title,
             maxLines: 2,
@@ -67,7 +70,7 @@ class SongListItem extends StatelessWidget {
             onPressed: () {},
             icon: Icon(
               Icons.play_arrow_outlined,
-              color: isPlaying ? Color(0xFFFA00FF) :Colors.white,
+              color: isPlaying ? const Color(0xFFFA00FF) :Colors.white,
             ),
           ),
         ),

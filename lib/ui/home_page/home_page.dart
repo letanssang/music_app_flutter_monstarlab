@@ -4,6 +4,7 @@ import 'package:music_app/services/audio_player_manager.dart';
 import 'package:music_app/ui/blur_image_background.dart';
 import 'package:music_app/ui/home_page/components/custom_appbar.dart';
 import 'package:music_app/ui/home_page/components/song_page_view_item.dart';
+import 'package:music_app/ui/music_player_page/components/rotating_album_art.dart';
 import 'package:music_app/ui/music_player_page/view_model/music_player_view_model.dart';
 
 import '../../data/models/song.dart';
@@ -107,7 +108,9 @@ class HomePage extends ConsumerWidget {
                                   left: 8.0,
                                   right: 30.0),
                               child: ClipOval(
-                                child: songs[songPlayingIndex].image,
+                                child: FittedBox(
+                                    child: RotatingAlbumArt(
+                                        image: songs[songPlayingIndex].image)),
                               ),
                             ),
                             Expanded(
@@ -143,7 +146,7 @@ class HomePage extends ConsumerWidget {
                               onPressed: ref
                                   .read(musicPlayerViewModelProvider.notifier)
                                   .skipBackward,
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.skip_previous,
                                 color: Colors.white,
                               ),
@@ -176,7 +179,7 @@ class HomePage extends ConsumerWidget {
                               onPressed: ref
                                   .read(musicPlayerViewModelProvider.notifier)
                                   .skipNext,
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.skip_next,
                                 color: Colors.white,
                               ),

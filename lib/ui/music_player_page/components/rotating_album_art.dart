@@ -5,8 +5,8 @@ import 'dart:math' as math;
 import '../../../services/audio_player_manager.dart';
 
 class RotatingAlbumArt extends StatefulWidget {
-  Widget image;
-  RotatingAlbumArt({required this.image, Key? key}) : super(key: key);
+  final Widget image;
+  const RotatingAlbumArt({required this.image, Key? key}) : super(key: key);
   @override
   State<RotatingAlbumArt> createState() => _RotatingAlbumArtState();
 }
@@ -18,7 +18,7 @@ class _RotatingAlbumArtState extends State<RotatingAlbumArt> with TickerProvider
   void initState() {
     // TODO: implement initState
     super.initState();
-    _controller = AnimationController(vsync: this, duration: Duration(seconds: 20))..forward()..addListener(() {
+    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 20))..forward()..addListener(() {
       if(_controller.isCompleted) {
         _controller.repeat();
       }
