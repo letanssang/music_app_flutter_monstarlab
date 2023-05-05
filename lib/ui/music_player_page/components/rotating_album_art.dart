@@ -2,7 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-import '../../../services/audio_player_manager.dart';
+import '../../../services/audio_player/audio_player_manager.dart';
 
 class RotatingAlbumArt extends StatefulWidget {
   final Widget image;

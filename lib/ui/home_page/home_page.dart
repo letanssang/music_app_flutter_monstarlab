@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:music_app/services/audio_player_manager.dart';
+import 'package:music_app/services/audio_player/player_view_model/player_view_model.dart';
 import 'package:music_app/ui/blur_image_background.dart';
 import 'package:music_app/ui/home_page/components/custom_appbar.dart';
 import 'package:music_app/ui/home_page/components/song_page_view_item.dart';
 import 'package:music_app/ui/music_player_page/components/rotating_album_art.dart';
-import 'package:music_app/ui/music_player_page/view_model/music_player_view_model.dart';
 
-import '../../data/models/song.dart';
-import '../../services/songs_provider.dart';
 import 'components/song_list_item.dart';
 
 class HomePage extends ConsumerWidget {
@@ -25,15 +22,17 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final songs = ref.watch(songsProvider) as List<Song>;
-    final songPlayingIndex = ref.watch(songPlayingIndexProvider);
-    final currentPosition = ref.watch(currentPostionProvider) ?? Duration.zero;
+    final state = ref.watch(playerProvider);
+    final viewModel = ref.read(playerProvider.notifier);
+    final songs = state.songs;
+    final playingSongIndex = state.playingSongIndex;
+    final currentPosition = state.currentPosition ?? Duration.zero;
     final pageController = PageController(
       viewportFraction: 0.5,
       initialPage: 1,
     );
     void clickOnItem(int index) {
-      ref.read(musicPlayerViewModelProvider.notifier).jumpToSong(index);
+      viewModel.jumpToSong(index);
     }
 
     return Scaffold(
@@ -81,12 +80,12 @@ class HomePage extends ConsumerWidget {
                       index: index,
                       song: songs[index],
                       onPressed: clickOnItem,
-                      isPlaying: songPlayingIndex == index,
+                      isPlaying: playingSongIndex == index,
                     ),
                   ),
                 ),
               ),
-              if (songPlayingIndex != null)
+              if (playingSongIndex != null)
                 Flexible(
                   flex: 1,
                   fit: FlexFit.tight,
@@ -110,7 +109,7 @@ class HomePage extends ConsumerWidget {
                               child: ClipOval(
                                 child: FittedBox(
                                     child: RotatingAlbumArt(
-                                        image: songs[songPlayingIndex].image)),
+                                        image: songs[playingSongIndex].image)),
                               ),
                             ),
                             Expanded(
@@ -118,7 +117,7 @@ class HomePage extends ConsumerWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    songs[songPlayingIndex].title,
+                                    songs[playingSongIndex].title,
                                     maxLines: 1,
                                     style: const TextStyle(
                                       color: Colors.white,
@@ -127,7 +126,7 @@ class HomePage extends ConsumerWidget {
                                     ),
                                   ),
                                   Text(
-                                    songs[songPlayingIndex].artist,
+                                    songs[playingSongIndex].artist,
                                     maxLines: 1,
                                     style: const TextStyle(
                                       color: Colors.white,
@@ -143,29 +142,17 @@ class HomePage extends ConsumerWidget {
                               ),
                             ),
                             IconButton(
-                              onPressed: ref
-                                  .read(musicPlayerViewModelProvider.notifier)
-                                  .skipBackward,
+                              onPressed: viewModel.skipBackward,
                               icon: const Icon(
                                 Icons.skip_previous,
                                 color: Colors.white,
                               ),
                             ),
                             IconButton(
-                              onPressed: ref
-                                      .watch(musicPlayerViewModelProvider)
-                                      .isPlaying
-                                  ? ref
-                                      .read(
-                                          musicPlayerViewModelProvider.notifier)
-                                      .pause
-                                  : ref
-                                      .read(
-                                          musicPlayerViewModelProvider.notifier)
-                                      .resume,
-                              icon: ref
-                                      .read(musicPlayerViewModelProvider)
-                                      .isPlaying
+                              onPressed: state.isPlaying
+                                  ? viewModel.pause
+                                  : viewModel.resume,
+                              icon: state.isPlaying
                                   ? const Icon(
                                       Icons.pause,
                                       color: Colors.white,
@@ -176,9 +163,7 @@ class HomePage extends ConsumerWidget {
                                     ),
                             ),
                             IconButton(
-                              onPressed: ref
-                                  .read(musicPlayerViewModelProvider.notifier)
-                                  .skipNext,
+                              onPressed: viewModel.skipNext,
                               icon: const Icon(
                                 Icons.skip_next,
                                 color: Colors.white,

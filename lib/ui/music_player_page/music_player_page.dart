@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:music_app/services/audio_player_manager.dart';
+import 'package:music_app/services/audio_player/audio_player_manager.dart';
+import 'package:music_app/services/audio_player/player_view_model/player_view_model.dart';
 import 'package:music_app/ui/blur_image_background.dart';
 import 'package:music_app/ui/music_player_page/components/rotating_album_art.dart';
 
 import '../../data/models/song.dart';
-import 'view_model/music_player_view_model.dart';
 
 class MusicPlayerPage extends ConsumerWidget {
   static const routeName = '/music-player';
@@ -19,41 +19,42 @@ class MusicPlayerPage extends ConsumerWidget {
 
     return '$minutes:$seconds';
   }
-  void showSnackBar(BuildContext context) {
+
+  void showSnackBar(BuildContext context, WidgetRef ref) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            IconButton(onPressed: (){
-              AudioPlayerSingleton().audioPlayer!.setVolume(0);
-            }, icon: SvgPicture.asset(
-              'assets/images/buttons/mute.svg',
-              height: 30,
-            )),
-            IconButton(onPressed: null, icon: SvgPicture.asset(
-              'assets/images/buttons/share.svg',
-              height: 30,
-            ))
+            IconButton(
+                onPressed: ref.read(playerProvider.notifier).onTapMute,
+                icon: SvgPicture.asset(
+                  'assets/images/buttons/mute.svg',
+                  height: 30,
+                  )),
+            IconButton(
+                onPressed: null,
+                icon: SvgPicture.asset(
+                  'assets/images/buttons/share.svg',
+                  height: 30,
+                ))
           ],
         ),
-        duration: const Duration(seconds: 5),
+        duration: const Duration(seconds: 3),
       ),
     );
   }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Song song = ref
-        .watch(musicPlayerViewModelProvider)
-        .song;
-    final viewModel = ref.read(musicPlayerViewModelProvider.notifier);
+    final state = ref.watch(playerProvider);
+    final viewModel = ref.watch(playerProvider.notifier);
+    final songs = state.songs;
+    Song song = songs[state.playingSongIndex ?? 0];
     AudioPlayerSingleton().audioPlayer!.onPositionChanged.listen((event) {
-      ref
-          .watch(currentPostionProvider.notifier)
-          .state = event;
+      viewModel.updateCurrentPosition(event);
     });
-    final currentPosition = ref.watch(currentPostionProvider) ?? Duration.zero;
-    final state = ref.watch(musicPlayerViewModelProvider);
+    final currentPosition = state.currentPosition ?? Duration.zero;
     return Scaffold(
       body: BlurImageBackground(
         child: SafeArea(
@@ -112,8 +113,9 @@ class MusicPlayerPage extends ConsumerWidget {
                         onPressed: viewModel.onTapFavorite,
                         icon: Icon(
                           Icons.favorite_rounded,
-                          color: state.isFavorite ? const Color(0xFFFA00FF) : Colors
-                              .white,
+                          color: song.isFavorite
+                              ? const Color(0xFFFA00FF)
+                              : Colors.white,
                           size: 25,
                         )),
                   ),
@@ -126,8 +128,8 @@ class MusicPlayerPage extends ConsumerWidget {
                       color: Colors.grey,
                     ),
                     child: IconButton(
-                        onPressed: (){
-                          showSnackBar(context);
+                        onPressed: () {
+                          showSnackBar(context, ref);
                         },
                         icon: const Icon(Icons.more_horiz_rounded,
                             color: Colors.white, size: 25)),
@@ -146,7 +148,7 @@ class MusicPlayerPage extends ConsumerWidget {
                 },
               ),
               Container(
-                margin: const EdgeInsets.only(left: 28,right: 28, bottom: 16),
+                margin: const EdgeInsets.only(left: 28, right: 28, bottom: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -162,11 +164,10 @@ class MusicPlayerPage extends ConsumerWidget {
                     Text(
                       formatDuration(song.duration),
                       style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 15,
-                        fontFamily: 'Nunito',
-                        fontWeight: FontWeight.bold
-                      ),
+                          color: Colors.white70,
+                          fontSize: 15,
+                          fontFamily: 'Nunito',
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -176,58 +177,52 @@ class MusicPlayerPage extends ConsumerWidget {
                 children: [
                   IconButton(
                       onPressed: viewModel.onTapShuffle,
-                      icon: state.isShuffle ?
-                      SvgPicture.asset(
-                        'assets/images/buttons/shuffle.svg',
-                        height: 30,
-                      ) :
-                      SvgPicture.asset(
-                        'assets/images/buttons/shuffle_off.svg',
-                        height: 30,
-                      )
-                  ),
+                      icon: state.isShuffle
+                          ? SvgPicture.asset(
+                              'assets/images/buttons/shuffle.svg',
+                              height: 30,
+                            )
+                          : SvgPicture.asset(
+                              'assets/images/buttons/shuffle_off.svg',
+                              height: 30,
+                            )),
                   IconButton(
                       onPressed: viewModel.skipBackward,
                       icon: const Icon(
                         Icons.skip_previous_outlined,
                         color: Colors.white,
                         size: 40,
-                      )
-                  ),
+                      )),
                   IconButton(
-                      onPressed: state.isPlaying
-                          ? viewModel.pause
-                          : viewModel.resume,
+                      onPressed:
+                          state.isPlaying ? viewModel.pause : viewModel.resume,
                       icon: state.isPlaying
                           ? SvgPicture.asset(
-                        'assets/images/buttons/pause.svg',
-                        height: 50,
-                      )
+                              'assets/images/buttons/pause.svg',
+                              height: 50,
+                            )
                           : SvgPicture.asset(
-                        'assets/images/buttons/play.svg',
-                        height: 50,
-                      )
-                  ),
+                              'assets/images/buttons/play.svg',
+                              height: 50,
+                            )),
                   IconButton(
                       onPressed: viewModel.skipNext,
                       icon: const Icon(
                         Icons.skip_next_outlined,
                         color: Colors.white,
                         size: 40,
-                      )
-                  ),
+                      )),
                   IconButton(
                       onPressed: viewModel.onTapRepeat,
-                      icon: ref.watch(isRepeatProvider) ?
-                      SvgPicture.asset(
-                        'assets/images/buttons/repeat.svg',
-                        height: 30,
-                      )
+                      icon: state.isRepeat
+                          ? SvgPicture.asset(
+                              'assets/images/buttons/repeat.svg',
+                              height: 30,
+                            )
                           : SvgPicture.asset(
-                        'assets/images/buttons/repeat_off.svg',
-                        height: 30,
-                      )
-                  ),
+                              'assets/images/buttons/repeat_off.svg',
+                              height: 30,
+                            )),
                 ],
               ),
             ],
